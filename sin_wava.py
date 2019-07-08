@@ -215,5 +215,13 @@ if __name__ == "__main__":
     cos_wave(initial_phase=-np.pi * 2 / 3, Period=1)
     cos_wave(initial_phase=np.pi * 2 / 3, Period=1)
 
+    cos_wave(initial_phase=0, Period=5)
+    cos_wave(initial_phase=-np.pi * 2 / 3, Period=5)
+    cos_wave(initial_phase=np.pi * 2 / 3, Period=5)
+
+    cos_wave(initial_phase=0, Period=6)
+    cos_wave(initial_phase=-np.pi * 2 / 3, Period=6)
+    cos_wave(initial_phase=np.pi * 2 / 3, Period=6)
+
     plt.show()
     cv2.waitKey(0)

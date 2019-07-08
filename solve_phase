@@ -59,17 +59,34 @@ def getWrapedPhase(imagePath ="./cos_pictures/" ,Period = 70) :
         img = np.asarray(img, dtype="float32")
         # cv2.imshow(str(each),img)
         grayImages.append(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
-    return grayImages
+    # WrapedPhase = np.zeros((Image_rows, Image_cols), dtype="float32")
+    # for i in range(Image_rows):
+    #     for j in range(Image_cols):
+    #         WrapedPhase[i][j] =np.arctan2(3 ** 0.5 * (grayImages[0][i][j] - grayImages[2][i][j]), (
+    #                     2 * grayImages[1][i][j] - (grayImages[0][i][j] + grayImages[2][i][j])))
+    WrapedPhase = np.arctan2(3 ** 0.5 * (grayImages[0] - grayImages[2]),
+                             (2 * grayImages[1] - (grayImages[0] + grayImages[2])))
+    return WrapedPhase
 
-grayImages=getWrapedPhase(imagePath ="./cos_pictures/" ,Period = 64)
-WrapedPhase = np.zeros((Image_rows, Image_cols), dtype="float32")
-# for i in range(Image_rows):
-#     for j in range(Image_cols):
-#         WrapedPhase[i][j] =np.arctan2(3 ** 0.5 * (grayImages[0][i][j] - grayImages[2][i][j]), (
-#                     2 * grayImages[1][i][j] - (grayImages[0][i][j] + grayImages[2][i][j])))
-WrapedPhase =np.arctan2(3 ** 0.5 * (grayImages[0] - grayImages[2]),(2 * grayImages[1] - (grayImages[0] + grayImages[2])))
-plt.figure("test")
-y_axis= WrapedPhase[0:1,:]
-plt.plot(x_axis_cos, y_axis.reshape(912))
-plt.plot(x_axis_cos,np.unwrap(y_axis.reshape(912))) ## plt.plot(x_axis_cos,np.unwrap(2*wraped_phase)/2)
+def showWrapedPhaseMap(WrapedPhase,Period = 70) :
+    """
+    # show WrapedPhaseMap
+    :param WrapedPhase:
+    :return:
+    """
+    WrapedPhaseMap = (WrapedPhase + np.pi) * 255 / (2 * np.pi)
+    img = np.asarray(WrapedPhaseMap, dtype="uint8")
+    cv2.imshow("WrapedPhaseMap_" + str(Period), img)
 
+
+def test(WrapedPhase) :
+    plt.figure("test")
+    y_axis= WrapedPhase[1:2,:]
+    plt.plot(x_axis_cos, y_axis.reshape(912))
+    plt.plot(x_axis_cos,np.unwrap(y_axis.reshape(912))) ## plt.plot(x_axis_cos,np.unwrap(2*wraped_phase)/2)
+
+
+if __name__ == "__main__":
+    WrapedPhase = getWrapedPhase(imagePath="./cos_pictures/", Period=5)
+    showWrapedPhaseMap(WrapedPhase, Period=5)
+    test(WrapedPhase)

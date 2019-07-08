@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="56412a52-03db-42c9-93ed-34051e792bfc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/solve_phase" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sin_wava.py" beforeDir="false" afterPath="$PROJECT_DIR$/sin_wava.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/solve_phase" beforeDir="false" afterPath="$PROJECT_DIR$/solve_phase" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,7 +19,7 @@
         <entry file="file://$PROJECT_DIR$/sin_wava.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="222">
-              <caret line="217" column="39" selection-start-line="217" selection-start-column="39" selection-end-line="217" selection-end-column="39" />
+              <caret line="188" column="11" lean-forward="true" selection-start-line="188" selection-end-line="188" selection-end-column="26" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -32,8 +30,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/solve_phase">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="71" column="26" lean-forward="true" selection-start-line="71" selection-start-column="26" selection-end-line="71" selection-end-column="26" />
+            <state relative-caret-position="245">
+              <caret line="87" selection-start-line="87" selection-end-line="87" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -192,8 +190,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="530" />
-    <option name="y" value="76" />
+    <option name="x" value="383" />
+    <option name="y" value="29" />
     <option name="width" value="1824" />
     <option name="height" value="896" />
   </component>
@@ -380,7 +378,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="530" y="76" width="1824" height="896" extended-state="0" />
+    <frame x="383" y="29" width="1824" height="896" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13165267" />
@@ -396,7 +394,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32506528" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="10" visible="true" weight="0.420191" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="10" visible="true" weight="0.34379265" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -714,7 +712,7 @@
     <entry file="file://$PROJECT_DIR$/sin_wava.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="222">
-          <caret line="217" column="39" selection-start-line="217" selection-start-column="39" selection-end-line="217" selection-end-column="39" />
+          <caret line="188" column="11" lean-forward="true" selection-start-line="188" selection-end-line="188" selection-end-column="26" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -723,8 +721,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/solve_phase">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="71" column="26" lean-forward="true" selection-start-line="71" selection-start-column="26" selection-end-line="71" selection-end-column="26" />
+        <state relative-caret-position="245">
+          <caret line="87" selection-start-line="87" selection-end-line="87" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

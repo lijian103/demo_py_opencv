@@ -12,7 +12,7 @@ square_size = 27.5
 # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
 objp = np.zeros((9 * 6, 3), np.float32)
 objp[:, :2] = np.mgrid[0:9, 0:6].T.reshape(-1, 2) * square_size
-#objp[:,2:3]=10
+# objp[:,2:3]=10
 # Arrays to store object points and image points from all the images.
 objpoints = []  # 3d point in real world space
 imgpoints = []  # 2d points in image plane.
@@ -46,39 +46,38 @@ for fname in images:
 
 tot_error = 0
 for i in range(len(imgpoints)):
-    imgpoints2,_ = cv2.projectPoints(objpoints[i], rvecs[i], tvecs[i], mtx, dist)
+    imgpoints2, _ = cv2.projectPoints(objpoints[i], rvecs[i], tvecs[i], mtx, dist)
     error = cv2.norm(imgpoints[i], imgpoints2, cv2.NORM_L2) / len(imgpoints2)
     tot_error += error
-average_error = (tot_error / len(imgpoints))**0.5
-print(ret,average_error)
+average_error = (tot_error / len(imgpoints)) ** 0.5
+print(ret, average_error)
 
-#畸变矫正部分程序
+# 畸变矫正部分程序
 for fname in images:
     img = cv2.imread(fname)
-    rows,cols=img.shape[:2]
-    newcamera_mtx,roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(cols,rows),0)
-    img_undistort=cv2.undistort(img,mtx,dist,None,newcamera_mtx)
-    x,y,cols,rows=roi
-    img_undistort=img_undistort[y:y+rows,x:x+cols]
+    rows, cols = img.shape[:2]
+    newcamera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (cols, rows), 0)
+    img_undistort = cv2.undistort(img, mtx, dist, None, newcamera_mtx)
+    x, y, cols, rows = roi
+    img_undistort = img_undistort[y:y + rows, x:x + cols]
     print(roi)
-    plt.subplot(121),plt.imshow(img),plt.title("img")
-    plt.subplot(122),plt.imshow(img_undistort),plt.title("img_undistort")
+    plt.subplot(121), plt.imshow(img), plt.title("img")
+    plt.subplot(122), plt.imshow(img_undistort), plt.title("img_undistort")
     plt.show()
 
-
-#畸变矫正部分(2)程序
+# 畸变矫正部分(2)程序
 for fname in images:
     img = cv2.imread(fname)
-    rows,cols=img.shape[:2]
-    newcamera_mtx,roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(cols,rows),1)
-    img_undistort=cv2.undistort(img,mtx,dist,None)
-    map_x,map_y=cv2.initUndistortRectifyMap(mtx,dist,None,newcamera_mtx,(cols,rows),5)
-    img_undistort=cv2.remap(img,map_x,map_y,cv2.INTER_LINEAR)
+    rows, cols = img.shape[:2]
+    newcamera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (cols, rows), 1)
+    img_undistort = cv2.undistort(img, mtx, dist, None)
+    map_x, map_y = cv2.initUndistortRectifyMap(mtx, dist, None, newcamera_mtx, (cols, rows), 5)
+    img_undistort = cv2.remap(img, map_x, map_y, cv2.INTER_LINEAR)
     print(map_x.shape)
     print(map_y)
 
-    plt.subplot(121),plt.imshow(img),plt.title("img")
-    plt.subplot(122),plt.imshow(img_undistort),plt.title("img_undistort")
+    plt.subplot(121), plt.imshow(img), plt.title("img")
+    plt.subplot(122), plt.imshow(img_undistort), plt.title("img_undistort")
     plt.show()
 
 if cv2.waitKey(1000 * 60) & 0xFF == ord('q'):

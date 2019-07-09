@@ -1,74 +1,48 @@
+import sys
 import numpy as np
 from matplotlib import pyplot as plt
 import cv2
 
-Image_rows = 1140
-Image_cols = 912
 
 freq_1 = 1 / 70
 freq_2 = 1 / 64
 freq_3 = 1 / 59
 
-waveLength_1 = Image_cols * freq_1
-waveLength_2 = Image_cols * freq_2
-waveLength_3 = Image_cols * freq_3
+waveLength_1 = freq_1
+waveLength_2 = freq_2
+waveLength_3 = freq_3
 
 waveLength_12 = (waveLength_1 * waveLength_2) / (waveLength_2 - waveLength_1)
+waveLength_23 = (waveLength_2 * waveLength_3) / (waveLength_3 - waveLength_2)
 
-initial_phase = 0
-Period = 5
-x_axis_cos = np.linspace(initial_phase, 2 * np.pi * Period + initial_phase, Image_cols)
-y_axis1_1 = 90 * np.cos(x_axis_cos) + 120
-plt.figure("cos_wave" + "_initial_phase_" + str(initial_phase) + "_Period_" + str(Period))
-plt.plot(x_axis_cos, y_axis1_1)
 
-initial_phase = -2*np.pi/3
-Period = 5
-x_axis_cos = np.linspace(initial_phase, 2 * np.pi * Period + initial_phase, Image_cols)
-y_axis1_0 = 90 * np.cos(x_axis_cos) + 120
-plt.figure("cos_wave" + "_initial_phase_" + str(initial_phase) + "_Period_" + str(Period))
-plt.plot(x_axis_cos, y_axis1_0)
-
-initial_phase = 2*np.pi/3
-Period = 5
-x_axis_cos = np.linspace(initial_phase, 2 * np.pi * Period + initial_phase, Image_cols)
-y_axis1_2 = 90 * np.cos(x_axis_cos) + 120
-plt.figure("cos_wave" + "_initial_phase_" + str(initial_phase) + "_Period_" + str(Period))
-plt.plot(x_axis_cos, y_axis1_2)
-
-wraped_phase= np.arctan2(3**0.5*(y_axis1_0-y_axis1_2),(2*y_axis1_1-(y_axis1_0+y_axis1_2)))
-plt.figure("wraped_phase")
-initial_phase = 0
-Period = 5
-x_axis_cos = np.arange(initial_phase,  Image_cols,1)
-plt.plot(x_axis_cos, wraped_phase)
-
-plt.plot(x_axis_cos,np.unwrap(wraped_phase)) ## plt.plot(x_axis_cos,np.unwrap(2*wraped_phase)/2)
-
-initial_phase = 0
-Period = 5
-def getWrapedPhase(imagePath ="./cos_pictures/" ,Period = 70) :
-    initial_phase= [-2*np.pi/3,0,2*np.pi/3]
-    imagePathList=[]
+def getWrapedPhase(imagePath="./cos_pictures/", Period=70, imgType=".bmp"):
+    initial_phase = [-2 * np.pi / 3, 0, 2 * np.pi / 3]
+    imagePathList = []
     grayImages = []
     for each in range(3):
         imagePathList.append(imagePath + "cos_wave" + "_Period_" + str(Period) + "_initial_phase_" + str(
-        initial_phase[each]) + ".bmp")
+            initial_phase[each]) + imgType)
         print(imagePathList[each])
         img = cv2.imread(imagePathList[each])
         img = np.asarray(img, dtype="float32")
         # cv2.imshow(str(each),img)
-        grayImages.append(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
-    # WrapedPhase = np.zeros((Image_rows, Image_cols), dtype="float32")
-    # for i in range(Image_rows):
-    #     for j in range(Image_cols):
+
+        if img.ndim == 3:
+            grayImages.append(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
+        elif img.ndim == 2:
+            grayImages.append(img)
+    # WrapedPhase = np.zeros((img.shape[0], img.shape[1]), dtype="float32")
+    # for i in range(img.shape[0]):
+    #     for j in range(img.shape[1]):
     #         WrapedPhase[i][j] =np.arctan2(3 ** 0.5 * (grayImages[0][i][j] - grayImages[2][i][j]), (
     #                     2 * grayImages[1][i][j] - (grayImages[0][i][j] + grayImages[2][i][j])))
-    WrapedPhase = np.arctan2(3 ** 0.5 * (grayImages[0] - grayImages[2]),
+    WrapedPhase = np.arctan2((3 ** 0.5) * (grayImages[0] - grayImages[2]),
                              (2 * grayImages[1] - (grayImages[0] + grayImages[2])))
     return WrapedPhase
 
-def showWrapedPhaseMap(WrapedPhase,Period = 70) :
+
+def showWrapedPhaseMap(WrapedPhase, imshowName="0"):
     """
     # show WrapedPhaseMap
     :param WrapedPhase:
@@ -76,17 +50,110 @@ def showWrapedPhaseMap(WrapedPhase,Period = 70) :
     """
     WrapedPhaseMap = (WrapedPhase + np.pi) * 255 / (2 * np.pi)
     img = np.asarray(WrapedPhaseMap, dtype="uint8")
-    cv2.imshow("WrapedPhaseMap_" + str(Period), img)
+    cv2.imshow("WrapedPhaseMap_" + imshowName, img)
 
 
-def test(WrapedPhase) :
+def test(WrapedPhase):
+    initial_phase = 0
+    x_axis_cos = np.arange(initial_phase,WrapedPhase.shape[1] , 1)
     plt.figure("test")
-    y_axis= WrapedPhase[1:2,:]
-    plt.plot(x_axis_cos, y_axis.reshape(912))
-    plt.plot(x_axis_cos,np.unwrap(y_axis.reshape(912))) ## plt.plot(x_axis_cos,np.unwrap(2*wraped_phase)/2)
+    y_axis = WrapedPhase[700:701, :]
+    plt.plot(x_axis_cos, y_axis.reshape(WrapedPhase.shape[1]))
+    # plt.plot(x_axis_cos,np.unwrap(y_axis.reshape(912))) ## plt.plot(x_axis_cos,np.unwrap(2*wraped_phase)/2)
+
+
+def unWrapPhase_lib(WrapedPhase):
+    """
+    此种方法求解方正的图片没什么问题，但对于倾斜的图像存在很大的问题，而大部分的图片都是倾斜的，
+    因此此方法在实际应用中并不合适。
+    :param WrapedPhase:
+    :param Period:
+    :return:
+    """
+    unWrapedPhase = np.zeros((WrapedPhase.shape[0], WrapedPhase.shape[1]), dtype="float32")
+    for each in range(WrapedPhase.shape[0]):
+        unWrapedPhase[each, :] = np.unwrap(WrapedPhase[each, :])
+    return unWrapedPhase
+
+
+def showUnWrapedPhaseMap(unWrapedPhase, Period, imshowName="0"):
+    """
+    # show UnWrapedPhaseMap
+    :param UnWrapedPhase:
+    :return:
+    """
+    unWrapedPhaseMap = (unWrapedPhase) * 255 / (Period * 2 * np.pi)
+    img = np.asarray(unWrapedPhaseMap, dtype="uint8")
+    cv2.imshow("unWrapedPhaseMap_" + str(Period) + "_" + imshowName, img)
+
+
+def unWrapPhase_multipleFre(WrapedPhase_1, WrapedPhase_2, waveLength_1, waveLength_2, flag=0):
+    """
+    存在一定的问题，最后一列展开相位后为0，按道理应该为最大值，可用 # test(unWrapedPhase_1)测试
+    :param WrapedPhase_1:
+    :param WrapedPhase_2:
+    :param waveLength_1:
+    :param waveLength_2:
+    :param flag:
+    :return:
+    """
+    if (waveLength_1 > waveLength_2):
+        print("need waveLength_2>waveLength_1")
+        sys.exit(-1)
+    unWrapedPhase = np.zeros((WrapedPhase_1.shape[0], WrapedPhase_1.shape[1]), dtype="float32")
+    if flag == 0:
+        for i in range(WrapedPhase_1.shape[0]):
+            for j in range(WrapedPhase_1.shape[1]):
+                if WrapedPhase_1[i][j] >= WrapedPhase_2[i][j]:
+                    unWrapedPhase[i][j] = (WrapedPhase_1[i][j] - WrapedPhase_2[i][j]) * waveLength_2 / (
+                            waveLength_2 - waveLength_1)
+                else:
+                    unWrapedPhase[i][j] = (2 * np.pi + WrapedPhase_1[i][j] - WrapedPhase_2[i][j]) * waveLength_2 / (
+                            waveLength_2 - waveLength_1)
+    elif flag == 1:
+        for i in range(WrapedPhase_1.shape[0]):
+            for j in range(WrapedPhase_1.shape[1]):
+                if WrapedPhase_1[i][j] >= WrapedPhase_2[i][j]:
+                    unWrapedPhase[i][j] = (WrapedPhase_1[i][j] - WrapedPhase_2[i][j]) * waveLength_1 / (
+                            waveLength_2 - waveLength_1)
+                else:
+                    unWrapedPhase[i][j] = (2 * np.pi + WrapedPhase_1[i][j] - WrapedPhase_2[i][j]) * waveLength_1 / (
+                            waveLength_2 - waveLength_1)
+    return unWrapedPhase
 
 
 if __name__ == "__main__":
-    WrapedPhase = getWrapedPhase(imagePath="./cos_pictures/", Period=5)
-    showWrapedPhaseMap(WrapedPhase, Period=5)
-    test(WrapedPhase)
+    # WrapedPhase_5 = getWrapedPhase(imagePath="./cos_pictures/", Period=5)
+    # showWrapedPhaseMap(WrapedPhase_5, Period=5)
+    # unWrapedPhase=unWrapPhase_lib(WrapedPhase_5, Period=5)
+    # showUnWrapedPhaseMap(unWrapedPhase,5)
+    #
+    #
+    # WrapedPhase_6 = getWrapedPhase(imagePath="./cos_pictures/", Period=6)
+    # showWrapedPhaseMap(WrapedPhase_6, Period=6)
+    # unWrapedPhase_1 = unWrapPhase_multipleFre(WrapedPhase_6,WrapedPhase_5, 912/6,912/5,1)
+    # showUnWrapedPhaseMap(unWrapedPhase_1, 5,"12")
+    # test(unWrapedPhase_1)
+
+    WrapedPhase_70 = getWrapedPhase(imagePath="./Htf_7_9_2/", Period=70)
+    showWrapedPhaseMap(WrapedPhase_70, imshowName="70")
+    WrapedPhase_64 = getWrapedPhase(imagePath="./Htf_7_9_2/", Period=64)
+    showWrapedPhaseMap(WrapedPhase_64,  imshowName="64")
+    WrapedPhase_59 = getWrapedPhase(imagePath="./Htf_7_9_2/", Period=59)
+    showWrapedPhaseMap(WrapedPhase_59,  imshowName="59")
+    unWrapedPhase_1_2 = unWrapPhase_multipleFre(WrapedPhase_70, WrapedPhase_64, waveLength_1, waveLength_2, 0)
+    unWrapedPhase_1_2_normalization = unWrapedPhase_1_2 * (waveLength_2 - waveLength_1) / waveLength_2
+
+    unWrapedPhase_2_3 = unWrapPhase_multipleFre(WrapedPhase_64, WrapedPhase_59, waveLength_2, waveLength_3, 0)
+    unWrapedPhase_2_3_normalization = unWrapedPhase_2_3 * (waveLength_3 - waveLength_2) / waveLength_3
+
+    unWrapedPhase_1_2__2_3 = unWrapPhase_multipleFre(unWrapedPhase_1_2_normalization, unWrapedPhase_2_3_normalization,
+                                                     waveLength_12, waveLength_23, 0)
+    showUnWrapedPhaseMap(unWrapedPhase_1_2__2_3, 6, "1_2__2_3")
+    test(unWrapedPhase_1_2__2_3)
+
+    # WrapedPhase_70 = getWrapedPhase(imagePath="./Htf_7_9/", Period=70)
+    # showWrapedPhaseMap(WrapedPhase_70, Period=70)
+    # unWrapedPhase_1_2__2_3=unWrapPhase_lib(WrapedPhase_70, Period=70)
+    # showUnWrapedPhaseMap(unWrapedPhase_1_2__2_3, 70, "1_2__2_3")
+    # test(unWrapedPhase_1_2__2_3)
